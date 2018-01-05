@@ -100,7 +100,7 @@ if ( strtolower($_SERVER['REQUEST_METHOD']) == 'post' ) {
 
     if (preg_match("/^multipart/", strtolower($_SERVER['CONTENT_TYPE']))) {
         $delimiter = '-------------' . uniqid();
-        $post_data = build_data_files($delimiter, $_POST, $_FILES);
+        $post_data = build_multipart_data_files($delimiter, $_POST, $_FILES);
         curl_setopt( $curl, CURLOPT_HTTPHEADER, getRequestHeaders($delimiter) );
     }
 
