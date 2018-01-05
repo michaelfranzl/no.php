@@ -65,6 +65,7 @@ function getRequestHeaders($multipart_delimiter=NULL) {
 
   
 function build_multipart_data_files($delimiter, $fields, $files) {
+    # Inspiration from: https://gist.github.com/maxivak/18fcac476a2f4ea02e5f80b303811d5f :)
     $data = '';
     $eol = "\r\n";
   
