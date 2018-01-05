@@ -25,11 +25,16 @@
 
 $backend_url = "https://myapp.backend.com:3000/";
 $request_uri = $_SERVER['REQUEST_URI'];
+$uri_rel = "subdir/no.php"; # URI to this file relative to public_html
+
+$request_includes_nophp_uri = true;
+if ( $request_includes_nophp_uri == false) {
+    $request_uri = str_replace( $uri_rel, "/", $request_uri );
+}
 
 $is_ruby_on_rails = false;
 if ( $is_ruby_on_rails == true) {
     # You have to understand the Ruby on Rails Asset pipeline to understand this.
-    $uri_rel = "subdir/no.php"; # URI to this file relative to public_html
     $request_uri = str_replace( "$uri_rel/assets", "/assets", $request_uri );
 }
 
