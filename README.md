@@ -11,13 +11,13 @@ Supports:
 * GET and POST verbs
 * Content types (HTTP payload) without discrimination
 * Redirects (internal redirects are rewritten to relative URIs)
+* Multipart content type
 
 Does not support (or not tested):
 
 * HTTP verbs other than GET and POST (but these are usually emulated anyway)
 * HTTP greater than version 1.1 (e.g. reusable connections)
 * Upgrade to websocket (persistent connections)
-* Multipart content type
 
 
 ## Usage illustrated by the standard example
