@@ -117,11 +117,13 @@ $headers_arr = preg_split( '/[\r\n]+/', $header_text );
   
 // Propagate headers to response.
 foreach ( $headers_arr as $header ) {
-    if ( preg_match( '/^Location:/i', $header ) ) {
-        # rewrite absolute local redirects to relative ones
-        $header = str_replace($backend_url, "/", $header);
+    if ( !preg_match( '/^Transfer-Encoding:/i', $header ) ) {
+        if ( preg_match( '/^Location:/i', $header ) ) {
+            # rewrite absolute local redirects to relative ones
+            $header = str_replace($backend_url, "/", $header);
+        }
+        header( $header );
     }
-    header( $header );
 }
 
 print $contents; # return the proxied request result to the browser
