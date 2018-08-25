@@ -47,7 +47,8 @@ function getRequestHeaders($multipart_delimiter=NULL) {
         if(preg_match("/^HTTP/", $key)) { # only keep HTTP headers
             if(preg_match("/^HTTP_HOST/", $key) == 0 && # let curl set the actual host/proxy
             preg_match("/^HTTP_ORIGIN/", $key) == 0 &&
-            preg_match("/^HTTP_CONTENT_LEN/", $key) == 0 # let curl set the actual content length
+            preg_match("/^HTTP_CONTENT_LEN/", $key) == 0 && # let curl set the actual content length
+            preg_match("/^HTTPS/", $key) == 0
             ) {
                 $key = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($key, 5)))));
                 array_push($headers, "$key: $value");
