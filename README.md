@@ -2,7 +2,7 @@
 
 Transparent reverse proxy written in PHP that allows you to not have to write PHP any more.
 
-This short, single-file, 80-line PHP script is a simple and fully transparent HTTP(S) reverse proxy written in PHP that allows you to never have to use PHP again for a new project, if you feel so inclined, for example if you are forced to host on a fully 3rd-party-managed server where you can't do more than run PHP and upload files via FTP. The PHP script simply reads all requests from a browser pointed to it, forwards them (via PHP's curl library) to a web application listening at another URL (e.g. on a more powerful, more secure, more private, or more capable server in a different data center), and returns the responses transparently and unmodified.
+This short, single-file, 130-line PHP script is a simple and fully transparent HTTP(S) reverse proxy written in PHP that allows you to never have to use PHP again for a new project, if you feel so inclined, for example if you are forced to host on a fully 3rd-party-managed server where you can't do more than run PHP and upload files via FTP. The PHP script simply reads all requests from a browser pointed to it, forwards them (via PHP's curl library) to a web application listening at another URL (e.g. on a more powerful, more secure, more private, or more capable server in a different data center), and returns the responses transparently and unmodified.
 
 Supports:
 
