@@ -51,13 +51,15 @@ function getRequestHeaders($multipart_delimiter=NULL) {
             preg_match("/^HTTPS/", $key) == 0
             ) {
                 $key = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($key, 5)))));
-                array_push($headers, "$key: $value");
+                if ($key)
+                    array_push($headers, "$key: $value");
             }
         } elseif (preg_match("/^CONTENT_TYPE/", $key)) {
             if(preg_match("/^multipart/", strtolower($value)) && $multipart_delimiter) {
                 $key = "Content-Type";
                 $value = "multipart/form-data; boundary=" . $multipart_delimiter;
-                array_push($headers, "$key: $value");
+                if ($key)
+                    array_push($headers, "$key: $value");
             }
         }
     }
