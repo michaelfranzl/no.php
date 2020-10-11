@@ -12,6 +12,7 @@ Supports:
 * Content types (HTTP payload) without discrimination
 * Redirects (internal redirects are rewritten to relative URIs)
 * Multipart content type
+* Cookies (with conversion of the backend domain to the no.php host)
 
 Does not support (or not tested):
 
