@@ -24,6 +24,8 @@
 
 
 $backend_url = "https://myapp.backend.com:3000/";
+$backend_info = parse_url($backend_url);
+$host = $_SERVER['HTTP_HOST'];
 $request_uri = $_SERVER['REQUEST_URI'];
 $uri_rel = "subdir/no.php"; # URI to this file relative to public_html
 
@@ -64,6 +66,18 @@ function getRequestHeaders($multipart_delimiter=NULL) {
     return $headers;
 }
 
+function build_domain_regex($hostname)
+{
+	$names = explode('.', $hostname); //assumes main domain is the TLD
+	$regex = "";
+	for ($i= 0; $i < count ($names)-2; $i++)
+	{
+		$regex .= '['.$names[$i].'.]?';
+	}
+	$main_domain = $names[count($names)-2] .".". $names[count($names)-1];
+	$regex .= $main_domain;
+	return $regex;
+}
   
 function build_multipart_data_files($delimiter, $fields, $files) {
     # Inspiration from: https://gist.github.com/maxivak/18fcac476a2f4ea02e5f80b303811d5f :)
@@ -123,6 +137,11 @@ foreach ( $headers_arr as $header ) {
             # rewrite absolute local redirects to relative ones
             $header = str_replace($backend_url, "/", $header);
         }
+        else if ( preg_match( '/^set-cookie:/i', $header ) ) {
+			# replace original domain name in Set-Cookie headers with our server's domain
+			$domain_regex = build_domain_regex($backend_info['host']);
+			$header = preg_replace('/Domain='.$domain_regex.'/', 'Domain='.$host, $header);
+		}
         header( $header );
     }
 }
