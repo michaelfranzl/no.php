@@ -144,7 +144,7 @@ foreach ( $headers_arr as $header ) {
 			$domain_regex = build_domain_regex($backend_info['host']);
 			$header = preg_replace('/Domain='.$domain_regex.'/', 'Domain='.$host, $header);
 		}
-        header( $header );
+        header( $header, false );
     }
 }
 
