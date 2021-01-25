@@ -57,11 +57,16 @@ function getRequestHeaders($multipart_delimiter=NULL) {
                     array_push($headers, "$key: $value");
             }
         } elseif (preg_match("/^CONTENT_TYPE/", $key)) {
+
+            $key = "Content-Type";
+
             if(preg_match("/^multipart/", strtolower($value)) && $multipart_delimiter) {
-                $key = "Content-Type";
                 $value = "multipart/form-data; boundary=" . $multipart_delimiter;
-                if ($key)
-                    array_push($headers, "$key: $value");
+                array_push($headers, "$key: $value");
+            }
+            else if(preg_match("/^application\/json/", strtolower($value))) {
+                // Handle application/json
+                array_push($headers, "$key: $value");
             }
         }
     }
