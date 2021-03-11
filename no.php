@@ -133,6 +133,7 @@ $contents = curl_exec( $curl ); # reverse proxy. the actual request to the backe
 curl_close( $curl ); # curl is done now
 
 
+$contents = preg_replace('/^HTTP\/1.1 3.*(?=HTTP\/1\.1)/sm', '', $contents); # remove redirection headers
 list( $header_text, $contents ) = preg_split( '/([\r\n][\r\n])\\1/', $contents, 2 );
 
 $headers_arr = preg_split( '/[\r\n]+/', $header_text ); 
