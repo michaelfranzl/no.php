@@ -30,11 +30,15 @@ $request_uri = $_SERVER['REQUEST_URI'];
 $uri_rel = "subdir/no.php"; # URI to this file relative to public_html
 
 $request_includes_nophp_uri = true;
+$allowInsecureSSLServers = false;
+$is_ruby_on_rails = false;
+
+//no changes below here
+
 if ( $request_includes_nophp_uri == false) {
     $request_uri = str_replace( $uri_rel, "/", $request_uri );
 }
 
-$is_ruby_on_rails = false;
 if ( $is_ruby_on_rails == true) {
     # You have to understand the Ruby on Rails Asset pipeline to understand this.
     $request_uri = str_replace( "$uri_rel/assets", "/assets", $request_uri );
@@ -115,6 +119,10 @@ curl_setopt( $curl, CURLOPT_HTTPHEADER, getRequestHeaders() );
 curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true ); # follow redirects
 curl_setopt( $curl, CURLOPT_HEADER, true ); # include the headers in the output
 curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true ); # return output as string
+if( $allowInsecureSSLServers){
+    curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt( $curl, CURLOPT_SSL_VERIFYHOST, false);
+}
 
 if ( strtolower($_SERVER['REQUEST_METHOD']) == 'post' ) {
     curl_setopt( $curl, CURLOPT_POST, true );
@@ -125,9 +133,16 @@ if ( strtolower($_SERVER['REQUEST_METHOD']) == 'post' ) {
         $post_data = build_multipart_data_files($delimiter, $_POST, $_FILES);
         curl_setopt( $curl, CURLOPT_HTTPHEADER, getRequestHeaders($delimiter) );
     }
-
-    curl_setopt( $curl, CURLOPT_POSTFIELDS, $post_data );
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data );
 }
+else if ( strtolower($_SERVER['REQUEST_METHOD']) == 'get' ) {
+  //Nothing for Get Requests
+} else {
+    //allow custom requests like webdav
+	curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $_SERVER['REQUEST_METHOD']);
+	$post_data = file_get_contents("php://input");
+	curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data );
+}  
   
 $contents = curl_exec( $curl ); # reverse proxy. the actual request to the backend server.
 curl_close( $curl ); # curl is done now
@@ -150,7 +165,11 @@ foreach ( $headers_arr as $header ) {
 			$domain_regex = build_domain_regex($backend_info['host']);
 			$header = preg_replace('/Domain='.$domain_regex.'/', 'Domain='.$host, $header);
 		}
-        header( $header, false );
+	if(str_starts_with($header, 'location: ')){
+		$header = str_replace('location: /', 'location: ', $header);
+        //fix eventual redirect problems
+	}
+	    header( $header, false );
     }
 }
 
